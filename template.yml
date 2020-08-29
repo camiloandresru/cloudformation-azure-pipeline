@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ---
+
+Parameters: 
+  BucketName:
+    Description: Bucket's name
+    Type: String
+    Default: bucket
+
+Resources: 
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:      
+      BucketName: !Sub "${BucketName}-camrodri"
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Statement:
+            - 
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource:
+                - !Join ["", [!GetAtt Bucket.Arn, "/*"]] 
+              Principal: "*"
+
+Outputs:
+  BucketArn:
+    Description: Bucket's ARN
+    Value: !GetAtt Bucket.Arn
+
+  
